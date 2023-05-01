@@ -147,9 +147,11 @@ for plugin in "${ENHANCED_PLUGINS[@]}"; do ../merge_to_master "$plugin" "Starwin
 
 ../merge_to_master "Starwind Enhanced.esm" StarwindRemasteredPatch.esm
 
-tes3cmd esp StarwindRemasteredPatch.esm
+../merge_to_master StarwindRemasteredPatch.esm StarwindRemasteredV1.15.esm
 
-mv StarwindRemasteredPatch.esp ../StarwindDE.esp
+tes3cmd esp StarwindRemasteredV1.15.esm
+
+mv StarwindRemasteredV1.15.esp ../StarwindDE.esp
 
 # Remove merge to master backups since we don't need those either
 rm -rf backups
