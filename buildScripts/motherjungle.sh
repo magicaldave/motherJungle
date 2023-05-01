@@ -91,6 +91,13 @@ for folder in "${DATA_FOLDERS[@]}"; do rsync -av $folder "Data Files"; rm -rf $f
 mv "Data Files"/*.esm .
 ./manual_starwind_clean.sh
 ./make_exterior_cells
+
 # Remove tes3cmd backups
 rm -rf backups
-cd ..
+
+# Prepare to MERGE
+[ ! -d "mergeDir/" ] && mkdir mergeDir
+
+mv *.esm mergeDir
+mv *.esp mergeDir
+mv *.omwaddon mergeDir
