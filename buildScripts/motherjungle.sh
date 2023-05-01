@@ -17,6 +17,7 @@ MASTER_ARCHIVES=(
 # Jawohl
 "SWC Starwind music replacer-52370-1-0-1676635695.rar"
 "Starwind - Death Troopers V0.9-52709-0-9-1682080991.rar"
+"TriOpArmor.zip"
 # Henry
 "Ahtar Companion - A Starwind Mod V1.1 - Compatibility Update-51036-1-1-1663474731.zip"
 "HEAU Companion - A Starwind Mod V.1.0-52703-1-0-1681948667.zip"
@@ -61,12 +62,62 @@ SUB_MODS=("Starwind Sabers Plus/"
 "SWC music mod/Data Files/"
 )
 
+OLD_FOLDERS=(
+    "Data Files"
+    "mergeDir"
+    "StarwindGFX"
+    "StarwindSFX"
+)
+
+OLD_ARCHIVES=(
+    "StarwindSFX.bsa"
+    "StarwindGFX.bsa"
+)
+
+BSA_FILES=(
+"StarwindGFX.bsa"
+"StarwindSFX.bsa"
+"StarwindDE.esp"
+)
+
+BASE_PLUGINS=(
+# Henry
+"ahtar companion mod - starwind.esp"
+"eseh'vehu companion mod - starwind.esp"
+"heau companion - a starwind mod.esp"
+"ignatious the mad companion mod - starwind.esp"
+"jiaza companion mod - starwind.esp"
+"mac vuart companion - a starwind mod.esp"
+"snaesk zyeq companion - a starwind mod.esp"
+"defend sandriver mod - starwind.esp"
+"the siddah ca way - official starwind expansion pack.esp"
+# Billy
+"starwind hut home.esp"
+"pazaak champion.esp"
+# Tubtubs
+"starwindimprovedkoltotanks.esp"
+)
+
+ENHANCED_PLUGINS=(
+# Billy
+"starwind better bodies.esp"
+"playable lightning.esp"
+"starwind manor home.esp"
+# Jawohl
+"starwind - death troopers v0.9a.esp"
+# Henry
+"cunnov dell companion - a starwind mod.esp"
+# Billy
+"champion of taris.esp"
+"dark apprentice.esp"
+)
+
 # Stop on errors
 set -e
 
-# Destroy the old folders if already present
-[ -d "Data Files/" ] && rm -rf "Data Files"
-[ -d "mergeDir/" ] && rm -rf mergeDir
+# Destroy the old data if already present
+for oldDir in "${OLD_FOLDERS[@]}"; do [ -d "$oldDir" ] && rm -rf $oldDir; done
+for oldArchive in "${OLD_ARCHIVES[@]}"; do [ -f "$oldArchive" ] && rm -rf $oldArchive; done
 
 #Extract and remove everything first
 for archive in "${MASTER_ARCHIVES[@]}"; do 7z x -y ../plugins/"$archive"; done
@@ -86,10 +137,10 @@ rm *.txt
 
 for dir in "${MUSIC_DIRS[@]}"; do mv Music/$dir Music/$(python -c "print(\"$dir\".capitalize())"); done
 
-for dir in "${JDAWG_DIRS[@]}"; do rsync -av $dir/* ${dir^}/* ; rm -rf $dir; done
+for dir in "${JDAWG_DIRS[@]}"; do rsync -av $dir/* ${dir^} ; rm -rf $dir; done
 
 # Do the overwrites
-for folder in "${DATA_FOLDERS[@]}"; do rsync -av $folder "Data Files"; rm -rf $folder; done
+for folder in "${DATA_FOLDERS[@]}"; do rsync -av "$folder" "Data Files"; rm -rf "$folder"; done
 
 # Apply the manual patches
 mv "Data Files"/*.esm .
@@ -99,59 +150,16 @@ mv "Data Files"/*.esm .
 # Remove tes3cmd backups
 rm -rf backups
 
-# Prepare to MERGE
-[ ! -d "mergeDir/" ] && mkdir mergeDir
+./mergeplugins.sh
 
-mv *.esm mergeDir
-mv *.esp mergeDir
-mv *.omwaddon mergeDir
+echo "Creating Starwind.bsa"
 
-cd mergeDir
-rm *\~* # delete loose backups
+bsatool create Starwind.bsa
 
-BASE_PLUGINS=(
-# Henry
-"ahtar companion mod - starwind.esp"
-"eseh'vehu companion mod - starwind.esp"
-"heau companion - a starwind mod.esp"
-"ignatious the mad companion mod - starwind.esp"
-"jiaza companion mod - starwind.esp"
-"mac vuart companion - a starwind mod.esp"
-"snaesk zyeq companion - a starwind mod.esp"
-"defend sandriver mod - starwind.esp"
-"the siddah ca way - official starwind expansion pack.esp"
-# Billy
-"starwind hut home.esp"
-"pazaak champion.esp"
-# Tubtubs
-"starwindimprovedkoltotanks.esp"
-)
-ENHANCED_PLUGINS=(
-# Billy
-"starwind better bodies.esp"
-"playable lightning.esp"
-"starwind manor home.esp"
-# Jawohl
-"starwind - death troopers v0.9a.esp"
-# Henry
-"cunnov dell companion - a starwind mod.esp"
-# Billy
-"champion of taris.esp"
-"dark apprentice.esp"
-)
+cd "Data Files"
 
-for plugin in "${BASE_PLUGINS[@]}"; do ../merge_to_master "$plugin" StarwindRemasteredPatch.esm; done
+find . -type f -exec ../bsagen.sh {} \;
 
-for plugin in "${ENHANCED_PLUGINS[@]}"; do ../merge_to_master "$plugin" "Starwind Enhanced.esm"; done
-
-../merge_to_master "Starwind Enhanced.esm" StarwindRemasteredPatch.esm
-
-../merge_to_master StarwindRemasteredPatch.esm StarwindRemasteredV1.15.esm
-
-tes3cmd esp StarwindRemasteredV1.15.esm
-
-mv StarwindRemasteredV1.15.esp ../StarwindDE.esp
-
-# Kill the merge folder
 cd ..
-rm -rf mergeDir
+
+rm -rf "Data Files"
