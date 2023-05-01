@@ -120,7 +120,7 @@ for archive in "${MASTER_ARCHIVES[@]}"; do 7z x -y ../plugins/"$archive"; done
 ./lowername.py
 
 # Clean up the mess we've made!
-mv ./Starwind3.1/Data\ Files/ ./Data\ Files/
+mv "Starwind3.1/Data Files/" "Data Files/"
 rm -rf Starwind3.1/
 
 for sub_mod in "${SUB_MODS[@]}"; do rsync -av  "$sub_mod" . ; rm -r "$sub_mod"; done
