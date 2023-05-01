@@ -88,9 +88,9 @@ for dir in "${JDAWG_DIRS[@]}"; do rsync -av $dir/* ${dir^}/* ; rm -rf $dir; done
 for folder in "${DATA_FOLDERS[@]}"; do rsync -av $folder "Data Files"; rm -rf $folder; done
 
 # Apply the manual patches
-cd Data\ Files
-../manual_starwind_clean.sh
-../make_exterior_cells
+mv "Data Files"/*.esm .
+./manual_starwind_clean.sh
+./make_exterior_cells
 # Remove tes3cmd backups
 rm -rf backups
 cd ..
