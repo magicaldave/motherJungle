@@ -110,8 +110,9 @@ cd mergeDir
 rm *\~* # delete loose backups
 
 # One of these mods currently depends on Enhanced and should be merged in the B_PLUGINS set
-H_PLUGINS=("ahtar companion mod - starwind.esp"
-"cunnov dell companion - a starwind mod.esp"
+BASE_PLUGINS=(
+# Henry
+"ahtar companion mod - starwind.esp"
 "eseh'vehu companion mod - starwind.esp"
 "heau companion - a starwind mod.esp"
 "ignatious the mad companion mod - starwind.esp"
@@ -120,26 +121,37 @@ H_PLUGINS=("ahtar companion mod - starwind.esp"
 "snaesk zyeq companion - a starwind mod.esp"
 "defend sandriver mod - starwind.esp"
 "the siddah ca way - official starwind expansion pack.esp"
-)
-B_PLUGINS=(
-"Starwind Enhanced.esm"
-"starwind better bodies.esp"
-"playable lightning.esp"
-"champion of taris.esp"
-"dark apprentice.esp"
-"pazaak champion.esp"
+# Billy
 "starwind hut home.esp"
-"starwind manor home.esp"
-)
-
-MISC_PLUGINS=(
-# Jawohl
-"starwind - death troopers v0.9a.esp"
+"pazaak champion.esp"
 # Tubtubs
 "starwindimprovedkoltotanks.esp"
 )
+ENHANCED_PLUGINS=(
+# Billy
+"starwind better bodies.esp"
+"playable lightning.esp"
+"starwind manor home.esp"
+# Jawohl
+"starwind - death troopers v0.9a.esp"
+# Henry
+"cunnov dell companion - a starwind mod.esp"
+# Billy
+"champion of taris.esp"
+"dark apprentice.esp"
+)
 
-for plugin in "${H_PLUGINS[@]}"; do ../merge_to_master "$plugin" StarwindRemasteredPatch.esm; done
+for plugin in "${BASE_PLUGINS[@]}"; do ../merge_to_master "$plugin" StarwindRemasteredPatch.esm; done
+
+for plugin in "${ENHANCED_PLUGINS[@]}"; do ../merge_to_master "$plugin" "Starwind Enhanced.esm"; done
+
+../merge_to_master "Starwind Enhanced.esm" StarwindRemasteredPatch.esm
+
+tes3cmd esp StarwindRemasteredPatch.esm
+
+mv StarwindRemasteredPatch.esp ../StarwindDE.esp
 
 # Remove merge to master backups since we don't need those either
 rm -rf backups
+cd ..
+rm -rf mergeDir
