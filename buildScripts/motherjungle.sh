@@ -64,6 +64,10 @@ SUB_MODS=("Starwind Sabers Plus/"
 # Stop on errors
 set -e
 
+# Destroy the old folders if already present
+[ -d "Data Files/" ] && rm -rf "Data Files"
+[ -d "mergeDir/" ] && rm -rf mergeDir
+
 #Extract and remove everything first
 for archive in "${MASTER_ARCHIVES[@]}"; do 7z x -y ../plugins/"$archive"; done
 
@@ -101,3 +105,41 @@ rm -rf backups
 mv *.esm mergeDir
 mv *.esp mergeDir
 mv *.omwaddon mergeDir
+
+cd mergeDir
+rm *\~* # delete loose backups
+
+# One of these mods currently depends on Enhanced and should be merged in the B_PLUGINS set
+H_PLUGINS=("ahtar companion mod - starwind.esp"
+"cunnov dell companion - a starwind mod.esp"
+"eseh'vehu companion mod - starwind.esp"
+"heau companion - a starwind mod.esp"
+"ignatious the mad companion mod - starwind.esp"
+"jiaza companion mod - starwind.esp"
+"mac vuart companion - a starwind mod.esp"
+"snaesk zyeq companion - a starwind mod.esp"
+"defend sandriver mod - starwind.esp"
+"the siddah ca way - official starwind expansion pack.esp"
+)
+B_PLUGINS=(
+"Starwind Enhanced.esm"
+"starwind better bodies.esp"
+"playable lightning.esp"
+"champion of taris.esp"
+"dark apprentice.esp"
+"pazaak champion.esp"
+"starwind hut home.esp"
+"starwind manor home.esp"
+)
+
+MISC_PLUGINS=(
+# Jawohl
+"starwind - death troopers v0.9a.esp"
+# Tubtubs
+"starwindimprovedkoltotanks.esp"
+)
+
+for plugin in "${H_PLUGINS[@]}"; do ../merge_to_master "$plugin" StarwindRemasteredPatch.esm; done
+
+# Remove merge to master backups since we don't need those either
+rm -rf backups
