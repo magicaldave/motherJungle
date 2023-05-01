@@ -153,7 +153,6 @@ tes3cmd esp StarwindRemasteredV1.15.esm
 
 mv StarwindRemasteredV1.15.esp ../StarwindDE.esp
 
-# Remove merge to master backups since we don't need those either
-rm -rf backups
+# Kill the merge folder
 cd ..
 rm -rf mergeDir
