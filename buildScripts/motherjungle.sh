@@ -69,15 +69,9 @@ OLD_FOLDERS=(
     "StarwindSFX"
 )
 
-OLD_ARCHIVES=(
-    "StarwindSFX.bsa"
-    "StarwindGFX.bsa"
-)
-
-BSA_FILES=(
-"StarwindGFX.bsa"
-"StarwindSFX.bsa"
-"StarwindDE.esp"
+OLD_FILES=(
+    "Starwind.bsa"
+    "StarwindDE.esp"
 )
 
 BASE_PLUGINS=(
@@ -117,7 +111,7 @@ set -e
 
 # Destroy the old data if already present
 for oldDir in "${OLD_FOLDERS[@]}"; do [ -d "$oldDir" ] && rm -rf $oldDir; done
-for oldArchive in "${OLD_ARCHIVES[@]}"; do [ -f "$oldArchive" ] && rm -rf $oldArchive; done
+for oldFile in "${OLD_FILES[@]}"; do [ -f "$oldFile" ] && rm -rf $oldFile; done
 
 #Extract and remove everything first
 for archive in "${MASTER_ARCHIVES[@]}"; do 7z x -y ../plugins/"$archive"; done
