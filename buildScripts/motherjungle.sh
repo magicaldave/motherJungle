@@ -109,7 +109,6 @@ mv *.omwaddon mergeDir
 cd mergeDir
 rm *\~* # delete loose backups
 
-# One of these mods currently depends on Enhanced and should be merged in the B_PLUGINS set
 BASE_PLUGINS=(
 # Henry
 "ahtar companion mod - starwind.esp"
