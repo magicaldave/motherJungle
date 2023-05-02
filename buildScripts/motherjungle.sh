@@ -34,9 +34,6 @@ MASTER_ARCHIVES=(
 "Starwind Sabers Plus-52179-1-982-1678327675.zip"
 # TubTubs
 "Starwind - Improved Kolto Tanks-50946-1-0-1649004863.zip")
-# No perms
-#"Carlo's expanded droid shop-50985-2-0-1650249613.zip"
-#"Starwind Bartending At Home-50972-v1SWEHotifx2ESMEdition-1663814080.zip"
 
 DATA_FOLDERS=("Icons"
 "Meshes"
@@ -70,7 +67,7 @@ OLD_FOLDERS=(
 )
 
 OLD_FILES=(
-    "Starwind.bsa"
+    "StarwindGFX.bsa"
     "StarwindDE.esp"
 )
 
@@ -144,16 +141,33 @@ mv "Data Files"/*.esm .
 # Remove tes3cmd backups
 rm -rf backups
 
+
 ./mergeplugins.sh
 
+mkdir bsaFiles
+
+BSAFILE="StarwindGFX.bsa"
+BSA_DIRS=(
+    "Textures"
+    "Meshes"
+    "Video"
+    "Icons"
+    "Animations"
+)
+
+echo "Moving BSA-compatible directories"
+for dir in "${BSA_DIRS[@]}"; do mv "Data Files"/$dir bsaFiles; done
+
 echo "Creating Starwind.bsa"
+bsatool create $BSAFILE
 
-bsatool create Starwind.bsa
+cd bsaFiles
 
-cd "Data Files"
-
-find . -type f -exec ../bsagen.sh {} \;
+find . -type f -exec ../bsagen.sh {} $BSAFILE \;
 
 cd ..
 
-rm -rf "Data Files"
+rm -rf bsaFiles
+
+mv $BSAFILE "Data Files"
+mv StarwindDE.esp "Data Files"
