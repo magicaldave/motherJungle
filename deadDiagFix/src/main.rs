@@ -1,18 +1,30 @@
 use tes3::esp::*;
 use std::env;
-
+use std::process;
 
 fn main() -> std::io::Result<()> {
-    let mut plugin;
 
-    if env::args().nth(1).is_some() {
-	let plugin_name = &env::args().nth(1).unwrap().to_string();
-	plugin = Plugin::from_path(plugin_name)?;
-	println!("Patching plugin {}", plugin_name);
+    let plugin_name;
+
+    let args: Vec<_> = env::args().collect();
+    match args.len() {
+	1 => plugin_name = "Starwind.esp",
+	2 => plugin_name = &args[1],
+	_ => todo!()
+    };
+
+
+
+    for disallowed_plugin in ["Bloodmoon.esm", "Morrowind.esm", "Tribunal.esm"] {
+	if plugin_name.eq(disallowed_plugin) {
+	    println!("Please don't use this on the Vanilla ESM files!");
+	    process::exit(0x0100);
+	}
     }
-    else {
-	plugin = Plugin::from_path("Starwind.esp")?;
-    }
+
+    println!("Patching plugin {}", plugin_name);
+
+    let mut plugin = Plugin::from_path(plugin_name)?;
 
     for info in plugin.objects_of_type_mut::<DialogueInfo>() {
 	for filter in info.filters.iter_mut() {
@@ -26,7 +38,7 @@ fn main() -> std::io::Result<()> {
     }
 
     // Save the updated plugin.
-    plugin.save_path("Starwind.esp")?;
+    plugin.save_path(plugin_name)?;
 
     Ok(())
 }
