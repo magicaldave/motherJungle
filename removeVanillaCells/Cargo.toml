@@ -1,0 +1,9 @@
+[package]
+name = "make_exterior_cells"
+version = "0.0.1"
+authors = ["Magicaldave <CorleyComputerRepair@protonmail.ch>"]
+edition = "2021"
+
+[dependencies.tes3]
+git = "https://github.com/Greatness7/tes3"
+branch = "dev"
