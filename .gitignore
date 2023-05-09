@@ -1,5 +1,6 @@
 /plugins/
 /removeVanillaCells/target/
+/*/target/
 /buildScripts/merge_to_master
 /buildScripts/makenormalmaps.sh
 /buildScripts/Data Files/
