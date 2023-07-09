@@ -5,3 +5,5 @@
 /buildScripts/makenormalmaps.sh
 /buildScripts/Data Files/
 /buildScripts/mergeDir/
+*.esp
+*.txt
