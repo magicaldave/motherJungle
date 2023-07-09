@@ -63,7 +63,7 @@ fn write_merchant_inventory(plugin: &Plugin, mut data_base: &File, npc_name: Str
                 if item.0 < 0 {
                     let item_name = &item.1.as_str();
                     let item_count = &(-item.0);
-                    let entry = format!("        {{\n            refId = {item_name},\n            count = {item_count},\n        }},\n");
+                    let entry = format!("        {{\n            refId = \"{item_name}\",\n            count = {item_count},\n        }},\n");
                     data_base.write(entry.as_bytes()).expect("Failed to write");
                 }
             }
