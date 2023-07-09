@@ -19,24 +19,32 @@ fn main() -> std::io::Result<()> {
 
     let merchant_ids = collect_merchant_ids(&plugin);
 
-    let mut merchant_indices: HashSet<String> = HashSet::new();
-
     let mut index_list = File::create(plugin_name.to_owned() + ".txt")?;
+
+    let mut restock_count = 0;
 
     for cell in plugin.objects_of_type::<Cell>() {
         for reference in &cell.references {
             let ref_name = &reference.1.id.to_ascii_lowercase();
-            if merchant_ids.contains(ref_name) {
-                let obj_idx = reference.1.refr_index;
+            if merchant_ids.contains(ref_name)
+                && check_merchant_inventory(&plugin, ref_name.to_string()) {
+
+                let obj_idx = reference.1.refr_index.to_string();
+
                 let merchant_data = format!("    [\"{obj_idx}-0\"] = {{ -- {ref_name}\n").to_string();
+
                 index_list.write(merchant_data.as_bytes()).expect("Failed to write");
+
                 write_merchant_inventory(&plugin, &index_list, ref_name.to_string());
+
                 index_list.write("    },\n".as_bytes()).expect("Failed to write");
-                // merchant_indices.insert(merchant_data.to_string());
+
+                restock_count += 1;
             }
         }
     }
 
+    println!("Wrote {restock_count} restocking NPCs to file.");
 
     Ok(())
 }
@@ -47,15 +55,14 @@ fn collect_merchant_ids(plugin: &Plugin) -> HashSet<String> {
 	      let npc_name = npc.editor_id().to_ascii_lowercase();
         let services = npc.ai_data.services;
         // Ignore the last four bits as they don't represent anything that needs to restock
-	      if (npc.ai_data.services & 16383) != 0 {
-		        results.insert(npc.editor_id().to_ascii_lowercase());
+	      if (services & 16383) != 0 {
+		        results.insert(npc_name);
 	      }
     }
     results
 }
 
 fn write_merchant_inventory(plugin: &Plugin, mut data_base: &File, npc_name: String) {
-
 
     for npc in plugin.objects_of_type::<Npc>() {
         if npc.editor_id().to_ascii_lowercase() == npc_name {
@@ -69,4 +76,20 @@ fn write_merchant_inventory(plugin: &Plugin, mut data_base: &File, npc_name: Str
             }
         }
     }
+}
+
+fn check_merchant_inventory(plugin: &Plugin, npc_name: String) -> bool {
+    let mut has_restocking_items = false;
+
+    for npc in plugin.objects_of_type::<Npc>() {
+        if npc.editor_id().to_ascii_lowercase() == npc_name {
+            for item in npc.inventory.iter() {
+                if item.0 < 0 {
+                    has_restocking_items = true;
+                    break;
+                }
+            }
+        }
+    }
+    has_restocking_items
 }
