@@ -10,7 +10,7 @@ for root, dirs, files in os.walk(directory):
         # get full path of file
         file_path = os.path.join(root, filename)
         # check if it's a file
-        if os.path.isfile(file_path) and not filename.endswith(".esp") and not filename.endswith(".esm"):
+        if not filename.endswith(".esp") and not filename.endswith(".esm") and not filename.endswith(".bsa"):
             # get new lowercase name
             new_name = filename.lower()
             # rename file
