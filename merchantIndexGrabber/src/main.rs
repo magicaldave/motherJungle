@@ -15,7 +15,7 @@ fn main() -> std::io::Result<()> {
 
     let mut merchant_data = String::new();
 
-    merchant_data.push_str("[{\n");
+    merchant_data.push_str("{\n");
 
     let args: Vec<_> = env::args().collect();
 
@@ -68,7 +68,7 @@ fn main() -> std::io::Result<()> {
     // Lazily remove the extra comma at the very end of the data to make valid JSON.
     merchant_data.truncate(merchant_data.len() - 2);
 
-    merchant_data.push_str("\n}]\n");
+    merchant_data.push_str("\n}\n");
 
     fs::write("merchantIndexDatabase.json", merchant_data).expect("Merchant data failed to write");
 
@@ -77,7 +77,7 @@ fn main() -> std::io::Result<()> {
 
 fn build_ref_initializer(refr: &Reference) -> String {
     // format!("    [\"{0}-0\"] = {{ \n        \"name\": \"{1}\"\n", refr.refr_index.to_string(), refr.id.to_ascii_lowercase())
-    format!("\"{0}\":{{ \n    \"name\":\"{0}\",\n    \"items\":[", refr.id.to_ascii_lowercase())
+    format!("\"{0}\":{{\n    \"uniqueIndex\":\"{1}-0\",\n    \"refId\":\"{0}\",\n    \"items\":{{", refr.id.to_ascii_lowercase(), refr.refr_index.to_string())
 }
 
 fn collect_merchant_ids(plugin: &Plugin) -> HashSet<String> {
@@ -116,14 +116,16 @@ fn write_merchant_inventory(mut npc: Npc) -> String {
 
         let item_name = &item_id.as_str().to_ascii_lowercase();
         let item_count = &(-count);
-        merchant_entry.push_str(format!("{{\n        \"refId\":\"{item_name}\",\n        \"count\":{item_count}\n    }}{0}",
-                            if (item_no + 1) != inv_len {","} else {""} ).as_str());
+        // merchant_entry.push_str(format!("{{\n        \"refId\":\"{item_name}\",\n        \"count\":{item_count}\n    }}{0}",
+        //                                 if (item_no + 1) != inv_len {","} else {""} ).as_str());
+        merchant_entry.push_str(format!("\n        \"{item_name}\":{item_count}{0}",
+                                        if (item_no + 1) != inv_len {","} else {""} ).as_str());
 
         // println!("{:?}", npc.inventory);
 
         // println!("{0} {inv_len}, {item_no}", npc.name);
     }
-    merchant_entry.push_str("]\n},\n");
+    merchant_entry.push_str("\n    }\n},\n");
     merchant_entry
 }
 
