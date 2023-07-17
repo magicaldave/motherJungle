@@ -104,11 +104,13 @@ fn get_merchant (plugin: &Plugin, npc_name: &String) -> Npc {
 }
 
 fn write_merchant_inventory(mut npc: Npc) -> String {
-    npc.inventory.retain(|item| item.0 < 0);
+    npc.inventory.retain(|item| item.0 < 0 );
 
     let mut merchant_entry = String::new();
 
     // println!("{:?}", npc.inventory);
+
+    merchant_entry.push_str(format!("    \"goldPool\":{0},\n    \"items\":{{", npc.data.gold).as_str());
 
     let inv_len = npc.inventory.len();
 
