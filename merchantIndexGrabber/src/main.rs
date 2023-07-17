@@ -8,10 +8,6 @@ use std::fs;
 use std::env;
 // Er, also write data to a file
 use std::io::{prelude::*, BufReader};
-// Check if files exist
-// use std::path::Path;
-// Check if it's at least trying to be a plugin
-// use std::io::BufReader;
 use std::path::PathBuf;
 
 fn main() -> std::io::Result<()> {
@@ -60,15 +56,7 @@ fn main() -> std::io::Result<()> {
 
                 merchant_data.push_str(&build_ref_initializer(&reference));
 
-                // index_list.write(build_ref_initializer(&reference).as_bytes()).expect("Failed to write");
-
                 merchant_data.push_str(&write_merchant_inventory(merchant.clone()));
-
-                // write_merchant_inventory(&index_list, merchant);
-
-                // index_list.write("    ]\n    },\n".as_bytes()).expect("Failed to write");
-
-                // merchant_data.push_str("    ]\n    },\n");
 
                 // instantiated_count += 1;
             }
@@ -116,8 +104,6 @@ fn get_merchant (plugin: &Plugin, npc_name: &String) -> Npc {
 }
 
 fn write_merchant_inventory(mut npc: Npc) -> String {
-    // let mut inventory = npc.inventory.clone();
-    // inventory.retain(|item| item.0 < 0);
     npc.inventory.retain(|item| item.0 < 0);
 
     let mut merchant_entry = String::new();
@@ -126,16 +112,7 @@ fn write_merchant_inventory(mut npc: Npc) -> String {
 
     let inv_len = npc.inventory.len();
 
-    // let mut item_count = 0;
-
-    // for item in &npc.inventory {
-    //     println!("{:?}, {item_count}", item);
-    //     item_count += 1;
-    // }
-
     for (item_no, (count, item_id)) in npc.inventory.iter().enumerate() {
-
-        // if *count > 0 { continue; }
 
         let item_name = &item_id.as_str().to_ascii_lowercase();
         let item_count = &(-count);
@@ -145,8 +122,6 @@ fn write_merchant_inventory(mut npc: Npc) -> String {
         // println!("{:?}", npc.inventory);
 
         // println!("{0} {inv_len}, {item_no}", npc.name);
-
-        // data_base.write(entry.as_bytes()).expect("Failed to write");
     }
     merchant_entry.push_str("]\n},\n");
     merchant_entry
@@ -199,11 +174,6 @@ fn return_plugin_list(mut extensions: Vec<&str>) -> Vec<(Plugin, String)> {
 
         // Grab the extension (Unwrap everything! AND THEN DO IT AGAIN!)
         let file_string = filename.extension().unwrap().to_str().unwrap().to_ascii_lowercase();
-        // let file_string = filename.extension();
-
-        // println!("{:?}", file_string);
-
-
 
         // Push installed plugin to the list, HOW DARE YOU THINK YOU'RE DONE UNWRAPPING
         // UNWRAP IT ONE LAST TIME YOU SORRY MAGGOT
