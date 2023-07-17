@@ -77,7 +77,8 @@ fn main() -> std::io::Result<()> {
 
 fn build_ref_initializer(refr: &Reference) -> String {
     // format!("    [\"{0}-0\"] = {{ \n        \"name\": \"{1}\"\n", refr.refr_index.to_string(), refr.id.to_ascii_lowercase())
-    format!("\"{0}\":{{\n    \"uniqueIndex\":\"{1}-0\",\n    \"refId\":\"{0}\",\n    \"items\":{{", refr.id.to_ascii_lowercase(), refr.refr_index.to_string())
+    // format!("\"{0}\":{{\n    \"uniqueIndex\":\"{1}-0\",\n    \"refId\":\"{0}\",\n    \"restocksGold\":true,\n    \"restocksItems\":true,\n", refr.id.to_ascii_lowercase(), refr.refr_index.to_string())
+    format!("\"{0}\":{{\n    \"restocksGold\":true,\n    \"restocksItems\":true,\n", refr.id.to_ascii_lowercase())
 }
 
 fn collect_merchant_ids(plugin: &Plugin) -> HashSet<String> {
