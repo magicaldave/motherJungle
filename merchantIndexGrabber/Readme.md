@@ -2,15 +2,13 @@
 
   * Place merchantIndexGrabber into your Data Files folder.
 
-  * Open a command line window inside `Data Files`
+  * Double-Click it. Make sure you are using Mash, or running merchantIndexGrabber inside of MO2. It does not support the OpenMW VFS, and it's not going to.
 
-  * Run it like so: `merchantIndexGrabber Tribunal.esm`
+    merchantIndexGrabber will dump the contents of every restocking merchant's inventory to a file called merchantIndexDatabase.json.
 
-    merchantIndexGrabber will dump the contents of every merchant NPC's inventory to a file by the same name as the plugin, with .txt at the end. For Tribunal.esm, it would be Tribunal.esm.txt.
+    The output *is no longer* in a format compatible with SkoomaBreath's customMerchantRestock, merchantIndexGrabber requires my forked version to read the external file. You can find it here: [here](https://github.com/magicaldave/motherJungle/releases/tag/merchantIndexGrabber)
 
-    The output should be in a format compatible with SkoomaBreath's customMerchantRestock, which you can find here.
-
-  * Copy the desired npcs directly into the itemsToRestock table, starting at line 45.
+  * Place the newly created database file into `Server/data/custom`, and restart the server.
 
   * ???
 
