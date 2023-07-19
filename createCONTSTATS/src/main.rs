@@ -9,20 +9,22 @@ fn main() -> std::io::Result<()> {
     // collect light names from the base game
     for plugin_name in ["Morrowind.esm", "Tribunal.esm", "Bloodmoon.esm"] {
 
-	// Load the actual plugin now that clerical stuff is done
+	      // Load the actual plugin now that clerical stuff is done
         let base_plugin = Plugin::from_path(plugin_name)?;
 
-	for container in base_plugin.objects_of_type::<Container>() {
-	    if container.id.contains("flora") && !container.id.contains("unique") {
+	      for container in base_plugin.objects_of_type::<Container>() {
+	          if container.id.contains("flora") && !container.id.contains("unique") {
 
-		// Make a dupe for the new plugin
-		let mut new_container = container.clone();
+		            // Make a dupe for the new plugin
+		            let mut new_container = container.clone();
 
-		new_container.inventory.push((5, FixedString("JWS_Plant Drops".to_string())));
+                new_container.inventory.clear();
 
-		plugin.objects.push(tes3::esp::TES3Object::Container(new_container));
-	    }
-	}
+		            new_container.inventory.push((5, FixedString("JWS_Plant Drops".to_string())));
+
+		            plugin.objects.push(tes3::esp::TES3Object::Container(new_container));
+	          }
+	      }
     }
 
 
@@ -139,7 +141,7 @@ fn main() -> std::io::Result<()> {
 	println!("Adding container {:?}", cont);
     }
 
-    plugin.save_path("statCONTS.esp")?;
+    plugin.save_path("Morrowind.esm")?;
 
     Ok(())
 }
