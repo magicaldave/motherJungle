@@ -141,7 +141,7 @@ fn main() -> std::io::Result<()> {
 	println!("Adding container {:?}", cont);
     }
 
-    plugin.save_path("Morrowind.esm")?;
+    plugin.save_path("statCONTS.esp")?;
 
     Ok(())
 }
