@@ -13,6 +13,7 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 struct MerchantData {
     restocks_gold: bool,
     restocks_items: bool,
+    restocks_containers: bool,
     gold_pool: u32,
     items: HashMap<String, i32>,
 }
@@ -34,6 +35,7 @@ fn main() -> std::io::Result<()> {
 
             merchent_data.restocks_items = true;
             merchent_data.restocks_gold = true;
+            merchent_data.restocks_containers = true;
             merchent_data.gold_pool = restocking_inventory.gold_pool;
 
             merchent_data.items.extend(restocking_inventory.items);
