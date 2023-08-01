@@ -144,30 +144,10 @@ rm -rf backups
 
 ./mergeplugins.sh
 
-mkdir bsaFiles
+wine ./BSArch.exe pack "Z:\home\s3kshun-8\GitHub\motherJungle\buildScripts\Data Files" "Z:\home\s3kshun-8\GitHub\motherJungle\buildScripts\Data Files\Starwind.bsa" -sse -z
 
-BSAFILE="StarwindGFX.bsa"
-BSA_DIRS=(
-    "Textures"
-    "Meshes"
-    "Video"
-    "Icons"
-    "Animations"
-)
+mv "Data Files"/Starwind.bsa .
+rm -rf "Data Files"/*
 
-echo "Moving BSA-compatible directories"
-for dir in "${BSA_DIRS[@]}"; do mv "Data Files"/$dir bsaFiles; done
-
-echo "Creating Starwind.bsa"
-bsatool create $BSAFILE
-
-cd bsaFiles
-
-find . -type f -exec ../bsagen.sh {} $BSAFILE \;
-
-cd ..
-
-rm -rf bsaFiles
-
-mv $BSAFILE "Data Files"
+mv Starwind.bsa "Data Files"
 mv StarwindDE.esp "Data Files"
