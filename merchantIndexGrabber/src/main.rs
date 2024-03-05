@@ -31,7 +31,7 @@ struct LeveledData {
     is_list: bool,
     list_flags: u32,
     chance_none: u8,
-    items: HashMap<String, u16>,
+    items: Vec<(String, u16)>,
 }
 
 fn main() -> std::io::Result<()> {
@@ -47,24 +47,26 @@ fn main() -> std::io::Result<()> {
 
     for (restocking_inventories, leveled_items, _path) in plugins {
         for restocking_inventory in restocking_inventories {
-
             let merchant_data = crate::MerchantData {
-                restock_minutes : 0,
-                restocks_items : true,
-                restocks_gold : true,
-                restocks_containers : true,
-                gold_pool : restocking_inventory.gold_pool,
-                items : convert_to_hashmap_npc(restocking_inventory.items),
+                restock_minutes: 0,
+                restocks_items: true,
+                restocks_gold: true,
+                restocks_containers: true,
+                gold_pool: restocking_inventory.gold_pool,
+                items: convert_to_hashmap_npc(restocking_inventory.items),
             };
-            data.insert(restocking_inventory.id, MerchantsOrLists::Merchants(merchant_data));
+            data.insert(
+                restocking_inventory.id,
+                MerchantsOrLists::Merchants(merchant_data),
+            );
         }
 
         for leveled_item in leveled_items {
             let entry = crate::LeveledData {
-                is_list : true,
-                list_flags : leveled_item.list_flags,
-                chance_none : leveled_item.chance_none,
-                items : convert_to_hashmap(leveled_item.items),
+                is_list: true,
+                list_flags: leveled_item.leveled_item_flags.bits(),
+                chance_none: leveled_item.chance_none,
+                items: leveled_item.items,
             };
             data.insert(leveled_item.id, MerchantsOrLists::LeveledLists(entry));
         }
@@ -121,6 +123,8 @@ fn collect_restocking_inventories(plugin: Plugin) -> Vec<RestockingInventory> {
             // Lowercase the ID to make it easier to work with.
             id.make_ascii_lowercase();
 
+            println!("MIG: {}", id);
+
             Some(RestockingInventory {
                 id,
                 gold_pool,
@@ -137,15 +141,6 @@ fn collect_levelled_items(plugin: Plugin) -> Vec<LeveledItem> {
         items.push(levi.clone());
     }
     items
-}
-
-fn convert_to_hashmap(items: Vec<(String, u16)>) -> HashMap<String, u16> {
-    let mut item_map = HashMap::<String, u16>::new();
-
-    for (item, count) in items {
-        item_map.insert(item, count);
-    }
-    item_map
 }
 
 fn convert_to_hashmap_npc(items: Vec<(String, i32)>) -> HashMap<String, i32> {
@@ -181,9 +176,7 @@ fn collect_plugins() -> Vec<(Vec<RestockingInventory>, Vec<LeveledItem>, PathBuf
 
             let mut levis = Plugin::new();
             if levis
-                .load_path_filtered(&path, |tag| {
-                    matches!(&tag, LeveledItem::TAG)
-                })
+                .load_path_filtered(&path, |tag| matches!(&tag, LeveledItem::TAG))
                 .is_err()
             {
                 println!("Failed to load {}", path.display());
