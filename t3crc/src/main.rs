@@ -23,7 +23,7 @@ fn main() -> io::Result<()> {
         // Open the file
         let mut filename = filename.to_str().unwrap();
 
-        if let Some(checksum) = base_plugins.get(filename) {
+        if let Some((_, checksum)) = base_plugins.get_key_value(get_filename_from_path(filename)) {
             if !use_paths {
                 filename = get_filename_from_path(filename);
             }
