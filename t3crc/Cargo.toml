@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 crc32fast = "1.4.0"
+openmw-cfg = "0.5.0"
