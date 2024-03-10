@@ -23,31 +23,31 @@ fn main() -> io::Result<()> {
         // Open the file
         let mut filename = filename.to_str().unwrap();
 
-        if let Some((_, checksum)) = base_plugins.get_key_value(get_filename_from_path(filename)) {
-            if !use_paths {
-                filename = get_filename_from_path(filename);
-            }
-            json.push_str(&format!("{{\"{}\": [\"{}\"]}}", filename, checksum));
-            if index != plugins.len() - 1 {
-                json.push_str(",\n");
-            }
-        } else {
-            let mut file = File::open(filename)?;
+        // if let Some((_, checksum)) = base_plugins.get_key_value(get_filename_from_path(filename)) {
+        //     if !use_paths {
+        //         filename = get_filename_from_path(filename);
+        //     }
+        //     json.push_str(&format!("{{\"{}\": [\"{}\"]}}", filename, checksum));
+        //     if index != plugins.len() - 1 {
+        //         json.push_str(",\n");
+        //     }
+        // } else {
+        let mut file = File::open(filename)?;
 
-            // Read the contents of the file into a buffer
-            buffer.clear();
-            file.read_to_end(&mut buffer)?;
+        // Read the contents of the file into a buffer
+        buffer.clear();
+        file.read_to_end(&mut buffer)?;
 
-            if !use_paths {
-                filename = get_filename_from_path(filename);
-            }
-
-            json.push_str(&json_string(filename, crc32fast::hash(&buffer)));
-
-            if index != plugins.len() - 1 {
-                json.push_str(",\n");
-            }
+        if !use_paths {
+            filename = get_filename_from_path(filename);
         }
+
+        json.push_str(&json_string(filename, crc32fast::hash(&buffer)));
+
+        if index != plugins.len() - 1 {
+            json.push_str(",\n");
+        }
+        // }
     }
 
     json.push_str("\n]");
