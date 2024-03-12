@@ -138,7 +138,12 @@ fn collect_levelled_items(plugin: Plugin) -> Vec<LeveledItem> {
     let mut items = vec![];
 
     for levi in plugin.objects_of_type::<LeveledItem>() {
-        items.push(levi.clone());
+        let mut levi_lower = levi.clone();
+        levi_lower.id.make_ascii_lowercase();
+        for item in levi_lower.items.iter_mut() {
+            item.0.make_ascii_lowercase();
+        }
+        items.push(levi_lower);
     }
     items
 }
