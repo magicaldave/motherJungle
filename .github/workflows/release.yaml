@@ -15,7 +15,7 @@ jobs:
     needs: setup
     strategy:
       matrix:
-        applet: [bookPatcher]
+        applet: [bookPatcher, t3crc, merchantIndexGrabber]
         os: [macos-latest, ubuntu-latest, windows-latest]
         include:
           - os: macos-latest-${{ matrix.applet }}
