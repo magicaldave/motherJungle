@@ -18,15 +18,15 @@ jobs:
         applet: [bookPatcher, t3crc, merchantIndexGrabber]
         os: [macos-latest, ubuntu-latest, windows-latest]
         include:
-          - os: macos-latest-${{ matrix.applet }}
-            binary: ${{ matrix.applet }}
+          - os: macos-latest
+            extension: ""
             archive: macos-latest.zip
-          - os: ubuntu-latest-${{ matrix.applet }}
-            binary: ${{ matrix.applet }}
-            archive: ubuntu-latest-${{ matrix.applet }}.zip
-          - os: windows-latest-${{ matrix.applet }}
-            binary: ${{ matrix.applet }}.exe
-            archive: windows-latest-${{ matrix.applet }}.zip
+          - os: ubuntu-latest
+            extension: ""
+            archive: ubuntu-latest.zip
+          - os: windows-latest
+            binary: ".exe"
+            archive: windows-latest.zip
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -36,7 +36,7 @@ jobs:
         run: cargo build --release --path ${{ matrix.applet }}
 
       - name: compress
-        run: tar -acf ${{ matrix.archive }} -C ${{ matrix.applet }}/target/release/ ${{ matrix.binary }}
+        run: tar -acf ${{ matrix.applet }}-${{ matrix.archive }} -C ${{ matrix.applet }}/target/release/ ${{ matrix.applet }}${ matrix.extension }}
 
       - name: upload
         uses: softprops/action-gh-release@v1
