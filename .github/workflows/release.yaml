@@ -1,0 +1,46 @@
+name: release
+on:
+  push:
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+  build:
+    needs: setup
+    strategy:
+      matrix:
+        applet: [bookPatcher]
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        include:
+          - os: macos-latest-${{ matrix.applet }}
+            binary: ${{ matrix.applet }}
+            archive: macos-latest.zip
+          - os: ubuntu-latest-${{ matrix.applet }}
+            binary: ${{ matrix.applet }}
+            archive: ubuntu-latest-${{ matrix.applet }}.zip
+          - os: windows-latest-${{ matrix.applet }}
+            binary: ${{ matrix.applet }}.exe
+            archive: windows-latest-${{ matrix.applet }}.zip
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@nightly
+
+      - name: build
+        run: cargo build --release --path ${{ matrix.applet }}
+
+      - name: compress
+        run: tar -acf ${{ matrix.archive }} -C ${{ matrix.applet }}/target/release/ ${{ matrix.binary }}
+
+      - name: upload
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: ${{ matrix.archive }}
