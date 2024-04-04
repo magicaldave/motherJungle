@@ -35,7 +35,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@nightly
 
       - name: build
-        run: cd ${{ matrix.applet }}; cargo build --release --path ${{ matrix.applet }}
+        run: cd ${{ matrix.applet }}; cargo build --release
 
       - name: compress
         run: tar -acf ${{ matrix.applet }}-${{ matrix.archive }} -C ./target/release/ ${{ matrix.applet }}${ matrix.extension }}
