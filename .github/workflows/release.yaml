@@ -38,7 +38,7 @@ jobs:
         run: cd ${{ matrix.applet }}; cargo build --release
 
       - name: compress
-        run: tar -acf ${{ matrix.applet }}-${{ matrix.archive }} -C ./target/release/ ${{ matrix.applet }}${ matrix.extension }}
+        run: tar -acf ${{ matrix.applet }}-${{ matrix.archive }} -C ./target/release/ ${{ matrix.applet }}${{ matrix.extension }}
 
       - name: upload
         uses: softprops/action-gh-release@v1
