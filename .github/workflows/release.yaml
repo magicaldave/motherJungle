@@ -18,11 +18,17 @@ jobs:
     strategy:
       matrix:
         applet: [bookPatcher, t3crc, merchantIndexGrabber]
-        os: [ubuntu-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
         include:
+          - os: macos-latest
+            extension: ""
+            archive: macos-latest.zip
           - os: ubuntu-latest
             extension: ""
             archive: ubuntu-latest.zip
+          - os: windows-latest
+            extension: ".exe"
+            archive: windows-latest.zip
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
