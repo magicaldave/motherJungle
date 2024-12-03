@@ -15,9 +15,9 @@ fn main() -> io::Result<()> {
     let mut required_data_files = File::create("requiredDataFiles.json").unwrap();
     // We are going to be charitable and assume these files will never actually be present for us to check
     let mut base_plugins = HashMap::new();
-    base_plugins.insert("Morrowind.esm", "0x7B6AF5B9");
-    base_plugins.insert("Tribunal.esm", "0xF481F334");
-    base_plugins.insert("Bloodmoon.esm", "0x43DD2132");
+    base_plugins.insert("Morrowind.esm", 0x7B6AF5B9);
+    base_plugins.insert("Tribunal.esm", 0xF481F334);
+    base_plugins.insert("Bloodmoon.esm", 0x43DD2132);
 
     for (index, filename) in plugins.iter().enumerate() {
         // Open the file
@@ -45,7 +45,7 @@ fn main() -> io::Result<()> {
         {
             filename = get_filename_from_path(filename);
 
-            json.push_str(&format!("{{\"{}\": [\"{}\"]}}", filename, checksum));
+            json.push_str(&json_string(filename, *checksum));
 
             if index != plugins.len() - 1 {
                 json.push_str(",\n");
