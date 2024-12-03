@@ -7,4 +7,7 @@ edition = "2021"
 
 [dependencies]
 crc32fast = "1.4.0"
-openmw-cfg = "0.5.0"
+
+[dependencies.openmw-cfg]
+git = "https://gitlab.com/magicaldave1/openmw-cfg"
+branch = "master"
