@@ -43,9 +43,9 @@ jobs:
 
       - name: build
         run: |
-          cd ${{ matrix.applet }} && \
-          cargo build --release && \
-          cd target/release && \
+          cd ${{ matrix.applet }}
+          cargo build --release
+          cd target/release
           7z a -tzip ../../../${{ matrix.applet }}-${{ matrix.archive }} ./${{ matrix.applet }}${{ matrix.extension }}
 
       - name: upload
