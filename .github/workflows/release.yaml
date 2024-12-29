@@ -17,7 +17,14 @@ jobs:
     needs: setup
     strategy:
       matrix:
-        applet: [bookPatcher, t3crc, merchantIndexGrabber]
+        applet:
+          [
+            bookPatcher,
+            t3crc,
+            merchantIndexGrabber,
+            addVanillaRefs,
+            deadDiagFix,
+          ]
         os: [macos-latest, ubuntu-latest, windows-latest]
         include:
           - os: macos-latest
