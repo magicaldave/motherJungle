@@ -1,5 +1,5 @@
 [package]
-name = "add_vanilla_refs"
+name = "addVanillaRefs"
 version = "0.0.1"
 authors = ["Magicaldave <CorleyComputerRepair@protonmail.ch>"]
 edition = "2021"
