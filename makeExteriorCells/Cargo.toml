@@ -1,5 +1,5 @@
 [package]
-name = "make_exterior_cells"
+name = "makeExteriorCells"
 version = "0.0.1"
 authors = ["Magicaldave <CorleyComputerRepair@protonmail.ch>"]
 edition = "2021"
