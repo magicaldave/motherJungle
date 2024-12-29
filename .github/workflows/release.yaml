@@ -24,7 +24,6 @@ jobs:
             merchantIndexGrabber,
             addVanillaRefs,
             deadDiagFix,
-            makeExteriorCells,
           ]
         os: [macos-latest, ubuntu-latest, windows-latest]
         include:
