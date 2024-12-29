@@ -15,7 +15,11 @@ serde = { version = "^1.0", features = ["derive"] }
 rayon = "1.7.0"
 serde_json = "^1.0"
 
+[dependencies.openmw-cfg]
+git = "https://gitlab.com/magicaldave1/openmw-cfg"
+branch = "master"
+
 [dependencies.tes3]
 git = "https://github.com/Greatness7/tes3"
 branch = "dev"
-features = ["esp", "nif", "nightly"]
+features = ["esp", "nif"]
