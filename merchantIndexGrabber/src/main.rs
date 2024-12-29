@@ -158,11 +158,13 @@ fn convert_to_hashmap_npc(items: Vec<(String, i32)>) -> HashMap<String, i32> {
 }
 
 fn collect_plugins() -> Vec<(Vec<RestockingInventory>, Vec<LeveledItem>, PathBuf)> {
-    std::fs::read_dir(".")
+    let config = openmw_cfg::get_config().expect("Failed to read openmw.cfg file!");
+
+    openmw_cfg::get_plugins(&config)
         .expect("Failed to read directory")
+        .into_iter()
         .par_bridge()
-        .filter_map(|entry| {
-            let path = entry.ok()?.path();
+        .filter_map(|path| {
             let extension = path.extension()?.to_ascii_lowercase();
             let ("esp" | "esm" | "omwaddon" | "omwgame") = extension.to_str()? else {
                 return None;
