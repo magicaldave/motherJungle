@@ -47,6 +47,10 @@ jobs:
           cargo build --release
           cd target/release
           7z a -tzip ../../../${{ matrix.applet }}-${{ matrix.archive }} ./${{ matrix.applet }}${{ matrix.extension }}
+          
+          if [ "${{ matrix.applet }}" = "merchantIndexGrabber" ]; then
+            7z u -tzip ../../../${{ matrix.applet }}-${{ matrix.archive }} ../../merchantIndexGrabber.lua
+          fi
 
       - name: upload
         uses: softprops/action-gh-release@v1
