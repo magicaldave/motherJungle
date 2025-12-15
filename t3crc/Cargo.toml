@@ -1,13 +1,14 @@
 [package]
 name = "t3crc"
-version = "0.1.0"
-edition = "2021"
+version = "1.0.0"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 crc32fast = "1.4.0"
-
-[dependencies.openmw-cfg]
-git = "https://gitlab.com/magicaldave1/openmw-cfg"
-branch = "master"
+native-dialog = "0.9.4"
+openmw-config = "0.1.92"
+serde = "1.0.228"
+serde_json = "1.0.145"
+vfstool_lib = "0.2.3"
