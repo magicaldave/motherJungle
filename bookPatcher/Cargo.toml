@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies.tes3]
 git = "https://github.com/Greatness7/tes3"
-branch = "dev"
+branch = "main"
