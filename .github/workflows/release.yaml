@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: softprops/action-gh-release@v2
+
   build:
     needs: setup
     strategy:
@@ -33,10 +34,12 @@ jobs:
             archive: windows-latest.zip
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
       - uses: dtolnay/rust-toolchain@stable
 
       - name: build
+        shell: bash
         run: |
           cd ${{ matrix.applet }}
           cargo build --release
@@ -48,7 +51,7 @@ jobs:
           fi
 
       - name: upload
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
