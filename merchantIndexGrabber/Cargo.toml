@@ -14,10 +14,8 @@ mimalloc = { version = "^0.1", default-features = false }
 serde = { version = "^1.0", features = ["derive"] }
 rayon = "1.7.0"
 serde_json = "^1.0"
-
-[dependencies.openmw-cfg]
-git = "https://gitlab.com/magicaldave1/openmw-cfg"
-branch = "master"
+openmw-config = "0.1.92"
+vfstool_lib = "0.2.3"
 
 [dependencies.tes3]
 git = "https://github.com/Greatness7/tes3"

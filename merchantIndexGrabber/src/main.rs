@@ -158,10 +158,27 @@ fn convert_to_hashmap_npc(items: Vec<(String, i32)>) -> HashMap<String, i32> {
 }
 
 fn collect_plugins() -> Vec<(Vec<RestockingInventory>, Vec<LeveledItem>, PathBuf)> {
-    let config = openmw_cfg::get_config().expect("Failed to read openmw.cfg file!");
+    let config = match openmw_config::OpenMWConfiguration::new(None) {
+        Ok(config) => config,
+        Err(error) => panic!("{error}"),
+    };
 
-    openmw_cfg::get_plugins(&config)
-        .expect("Failed to read directory")
+    let vfs = vfstool_lib::VFS::from_directories(config.data_directories(), None);
+    let paths: Vec<PathBuf> = config
+        .content_files_iter()
+        .map(|plugin_name| match vfs.get_file(plugin_name.value()) {
+            None => {
+                eprintln!(
+                    "Couldn't find {} in the vfs. Aborting!",
+                    plugin_name.value()
+                );
+                std::process::exit(256);
+            }
+            Some(vfs_entry) => vfs_entry.path().to_path_buf(),
+        })
+        .collect();
+
+    paths
         .into_iter()
         .par_bridge()
         .filter_map(|path| {
