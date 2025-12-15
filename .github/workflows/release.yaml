@@ -47,7 +47,7 @@ jobs:
           7z a -tzip ../../../${{ matrix.applet }}-${{ matrix.archive }} ./${{ matrix.applet }}${{ matrix.extension }}
           
           if [ "${{ matrix.applet }}" = "merchantIndexGrabber" ]; then
-            7z u -tzip ../../../${{ matrix.applet }}-${{ matrix.archive }} ../../merchantIndexGrabber.lua
+            7z u -tzip ../../../${{ matrix.applet }}-${{ matrix.archive }} ../../customMerchantRestock.lua
           fi
 
       - name: upload
