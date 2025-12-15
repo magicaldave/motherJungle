@@ -1,7 +1,6 @@
 use tes3::esp::*;
 
 use std::env;
-use std::fs;
 
 fn main() -> std::io::Result<()> {
     let plugin_name;
