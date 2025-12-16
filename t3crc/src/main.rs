@@ -28,12 +28,17 @@ fn main() -> io::Result<()> {
         let vfs_entry = match vfs.get_file(content_file.value()) {
             Some(file) => file,
             None => {
-                native_dialog::DialogBuilder::message()
-                    .set_text(format!("Failed to locate plugin: {} in the provided VFS. Bailing out on requiredDataFiles generation.", content_file.value()))
+                let fail_str = format!("Failed to locate plugin: {} in the provided VFS. Bailing out on requiredDataFiles generation.", content_file.value());
+
+                let result = native_dialog::DialogBuilder::message()
+                    .set_text(&fail_str)
                     .set_title("Couldn't locate plugin")
                     .alert()
-                    .show()
-                    .unwrap();
+                    .show();
+
+                if let Err(_) = result {
+                    eprintln!("{fail_str}");
+                }
 
                 std::process::exit(256);
             }
@@ -41,12 +46,17 @@ fn main() -> io::Result<()> {
 
         if let Some(ext) = vfs_entry.path().extension() {
             if ext.eq_ignore_ascii_case("omwscripts") {
-                native_dialog::DialogBuilder::message()
-                    .set_text(format!("Incompatible plugin found: {} cannot be used in TES3MP.", content_file.value()))
+                let fail_str = format!("Incompatible plugin found: {} cannot be used in TES3MP.", content_file.value());
+
+                let result = native_dialog::DialogBuilder::message()
+                    .set_text(&fail_str)
                     .set_title("Incompatible modlist detected!")
                     .alert()
-                    .show()
-                    .unwrap();
+                    .show();
+
+                if let Err(_) = result {
+                    eprintln!("{fail_str}")
+                }
 
                 std::process::exit(255);
             }
