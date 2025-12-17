@@ -1,16 +1,15 @@
-name: release
+name: MotherJungle Manufacturing
+
 on:
+  workflow_dispatch:
+  pull_request:
   push:
+    branches: main
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
-jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: softprops/action-gh-release@v2
 
+jobs:
   build:
-    needs: setup
     strategy:
       matrix:
         applet:
@@ -21,38 +20,21 @@ jobs:
             addVanillaRefs,
             deadDiagFix,
           ]
-        os: [macos-latest, ubuntu-latest, windows-latest]
-        include:
-          - os: macos-latest
-            extension: ""
-            archive: macos-latest.zip
-          - os: ubuntu-latest
-            extension: ""
-            archive: ubuntu-latest.zip
-          - os: windows-latest
-            extension: ".exe"
-            archive: windows-latest.zip
+        os: [macos-latest, macos-15-intel, ubuntu-latest, windows-latest]
+
     runs-on: ${{ matrix.os }}
+    
+    permissions:
+      contents: write
+      id-token: write
+    
     steps:
       - uses: actions/checkout@v4
-
-      - uses: dtolnay/rust-toolchain@stable
-
-      - name: build
-        shell: bash
-        run: |
-          cd ${{ matrix.applet }}
-          cargo build --release
-          cd target/release
-          7z a -tzip ../../../${{ matrix.applet }}-${{ matrix.archive }} ./${{ matrix.applet }}${{ matrix.extension }}
-          
-          if [ "${{ matrix.applet }}" = "merchantIndexGrabber" ]; then
-            7z u -tzip ../../../${{ matrix.applet }}-${{ matrix.archive }} ../../customMerchantRestock.lua
-          fi
-
-      - name: upload
-        uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Run Corprus Crucible for ${{ matrix.applet }}
+        uses: DreamWeave-MP/StroggForge/.github/actions/corprus-crucible@v1
         with:
-          files: ${{ matrix.applet }}-${{ matrix.archive }}
+          binary_name: ${{ matrix.applet }}
+          vt_api_key: ${{ secrets.VT_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          include_files: ${{ matrix.applet == 'merchantIndexGrabber' && 'customMerchantRestock.lua' || '' }}
