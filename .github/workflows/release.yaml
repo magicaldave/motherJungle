@@ -48,16 +48,53 @@ jobs:
           release_name: ${{ needs.release_cleanup.outputs.release_name }}
           include_files: ${{ matrix.applet == 'merchantIndexGrabber' && 'customMerchantRestock.lua' || '' }}
 
+  format-release-notification:
+    needs: release
+    runs-on: ubuntu-latest
+
+    outputs:
+      discord_notification: ${{ steps.format.outputs.discord_notification }}
+      discord_notification_title: ${{ steps.format.outputs.discord_notification_title }}
+
+    steps:
+      - name: Format Release Notification
+        id: format
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            RELEASE_NAME="${{ github.ref_name }}"
+            DISPLAY_NAME="${{ github.ref_name }}"
+          else
+            RELEASE_NAME="development"
+            DISPLAY_NAME="${${{ github.sha }}:0:7}"
+          fi
+
+          if [[ ${{ needs.release.result }} == 'success' ]]; then
+            RESULT="calling"
+            DISCORD_NOTIFICATION=$(cat <<EOF
+            [Life emanates once more from the ancient forest, thanks to version $DISPLAY_NAME. . .](https://github.com/${{ github.repository }}/releases/tag/$RELEASE_NAME)
+            EOF
+            )
+          else
+            RESULT="dying"
+            DISCORD_NOTIFICATION=$(cat <<EOF
+            [Version $DISPLAY_NAME has brought unlife to this ancient place . . .](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            EOF
+            )
+          fi
+
+          echo "discord_notification=$DISCORD_NOTIFICATION"
+          echo "discord_notification_title=MotherJungle is $RESULT . . ."
+
   # For workflows where users may now receive a new deliverable, notify them about it!
   call-discord-webhook:
     if: always() && github.event_name == 'push'
-    needs: release
+    needs: [release, format-release-notification]
     uses: DreamWeave-MP/StroggForge/.github/workflows/discord.yml@v6
     secrets:
       WEBHOOK_URL: ${{ secrets.DW_TOOLS_CHANNEL_WEBHOOK }}
     with:
-      title: ${{ needs.release.result == 'failure' && format('{0} pipeline failed! 😭', github.event.repository.name) || '' }}
-      description: ${{ needs.release.result == 'failure' && format('[Workflow Results](https://github.com/{0}/actions/runs/{1})', github.repository, github.run_id) || ''}}
+      title: ${{ needs.format-release-notification.outputs.discord_notification_title }}
+      description: ${{ needs.format-release-notification.outputs.discord_notification }}
 
   # For any repositories which use this one as a dependent,
   # notify them by creating an issue within the DreamWeave org's scope.
