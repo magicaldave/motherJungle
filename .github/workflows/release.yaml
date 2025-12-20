@@ -64,9 +64,12 @@ jobs:
             RELEASE_NAME="${{ github.ref_name }}"
             DISPLAY_NAME="${{ github.ref_name }}"
           else
+            github_sha_name=${{ github.sha }}
             RELEASE_NAME="development"
-            DISPLAY_NAME="${${{ github.sha }}:0:7}"
+            DISPLAY_NAME="${github_sha_name:0:7}"
           fi
+
+          echo "Previous result was . . . ${{ needs.release.result }}"
 
           if [[ ${{ needs.release.result }} == 'success' ]]; then
             RESULT="calling"
