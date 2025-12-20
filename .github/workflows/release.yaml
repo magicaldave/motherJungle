@@ -74,16 +74,10 @@ jobs:
 
           if [[ ${{ needs.release.result }} == 'success' ]]; then
             RESULT="calling"
-            DISCORD_NOTIFICATION=$(cat <<EOF
-            [Life emanates once more from the ancient forest, thanks to version $DISPLAY_NAME. . .](https://github.com/${{ github.repository }}/releases/tag/$RELEASE_NAME)
-            EOF
-            )
+            DISCORD_NOTIFICATION="[Life emanates once more from the ancient forest, thanks to version $DISPLAY_NAME. . .](https://github.com/${{ github.repository }}/releases/tag/$RELEASE_NAME)"
           else
             RESULT="dying"
-            DISCORD_NOTIFICATION=$(cat <<EOF
-            [Version $DISPLAY_NAME has brought unlife to this ancient place . . .](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-            EOF
-            )
+            DISCORD_NOTIFICATION="[Version $DISPLAY_NAME has brought unlife to this ancient place . . .](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
           fi
 
           echo "discord_notification=$DISCORD_NOTIFICATION" >> $GITHUB_OUTPUT
