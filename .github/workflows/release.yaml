@@ -50,6 +50,7 @@ jobs:
 
   format-release-notification:
     needs: release
+    if: always()
     runs-on: ubuntu-latest
 
     outputs:
@@ -58,7 +59,6 @@ jobs:
 
     steps:
       - name: Format Release Notification
-        if: always()
         id: format
         run: |
           if [[ "${{ github.ref }}" == refs/tags/* ]]; then
