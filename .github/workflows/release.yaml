@@ -70,8 +70,6 @@ jobs:
             DISPLAY_NAME="${github_sha_name:0:7}"
           fi
 
-          echo "Previous result was . . . ${{ needs.release.result }}"
-
           if [[ ${{ needs.release.result }} == 'success' ]]; then
             RESULT="calling"
             DISCORD_NOTIFICATION="[Life emanates once more from the ancient forest, thanks to version $DISPLAY_NAME. . .](https://github.com/${{ github.repository }}/releases/tag/$RELEASE_NAME)"
