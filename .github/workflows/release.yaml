@@ -110,4 +110,4 @@ jobs:
       DW_BOT_PAT: ${{ secrets.DW_BOT_PAT }}
     with:
       aur_package_name: ${{ needs.aur-publish.outputs.pkg_name }}
-      target_repo: ${{ matrix.target_repo }}"
+      target_repo: ${{ matrix.target_repo }}
