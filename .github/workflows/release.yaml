@@ -82,8 +82,8 @@ jobs:
             )
           fi
 
-          echo "discord_notification=$DISCORD_NOTIFICATION"
-          echo "discord_notification_title=MotherJungle is $RESULT . . ."
+          echo "discord_notification=$DISCORD_NOTIFICATION" >> $GITHUB_OUTPUT
+          echo "discord_notification_title=MotherJungle is $RESULT . . ." >> $GITHUB_OUTPUT
 
   # For workflows where users may now receive a new deliverable, notify them about it!
   call-discord-webhook:
