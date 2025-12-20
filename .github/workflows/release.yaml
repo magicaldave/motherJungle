@@ -58,6 +58,7 @@ jobs:
 
     steps:
       - name: Format Release Notification
+        if: always()
         id: format
         run: |
           if [[ "${{ github.ref }}" == refs/tags/* ]]; then
