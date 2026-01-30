@@ -15,7 +15,7 @@ fn main() -> io::Result<()> {
         .collect::<Vec<String>>()
         .contains(&String::from("--use-paths"));
 
-    let config = match OpenMWConfiguration::new(None) {
+    let config = match OpenMWConfiguration::from_env() {
         Err(err) => panic!("{err}"),
         Ok(config) => config,
     };
