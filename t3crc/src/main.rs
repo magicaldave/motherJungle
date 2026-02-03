@@ -40,7 +40,7 @@ fn main() -> io::Result<()> {
                     eprintln!("{fail_str}");
                 }
 
-                std::process::exit(256);
+                std::process::exit(254);
             }
         };
 
